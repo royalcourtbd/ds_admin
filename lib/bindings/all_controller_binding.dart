@@ -1,4 +1,5 @@
 import 'package:ds_admin/app/homePage/cotroller/home_page_controller.dart';
+import 'package:ds_admin/app/mainPage/controller/main_page_controller.dart';
 import 'package:ds_admin/app/productPage/controller/brand_page_controller.dart';
 import 'package:ds_admin/app/productPage/controller/category_page_controller.dart';
 import 'package:ds_admin/app/productPage/controller/product_page_controller.dart';
@@ -9,6 +10,9 @@ class AllControllerBinding implements Bindings {
   void dependencies() {
     // TODO: implement dependencies
 
+    Get.lazyPut<MainPageController>(
+      () => MainPageController(),
+    );
     Get.lazyPut<HomePageController>(
       () => HomePageController(),
     );

@@ -15,6 +15,7 @@ class AddProductPage extends GetView<ProductPageController> {
     return Scaffold(
       appBar: AppBar(title: const Text('Add Product')),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Form(
           key: controller.addProductKey,
           child: Column(
@@ -158,6 +159,9 @@ class AddProductPage extends GetView<ProductPageController> {
                   controller.addToProductButton();
                 },
                 child: const Text('Add Product'),
+              ),
+              const SizedBox(
+                height: 200,
               )
             ],
           ),

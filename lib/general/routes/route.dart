@@ -1,4 +1,5 @@
 import 'package:ds_admin/app/homePage/screen/home_page_view.dart';
+import 'package:ds_admin/app/mainPage/screen/main_page_view.dart';
 import 'package:ds_admin/app/productPage/screen/add_product_page.dart';
 import 'package:ds_admin/app/productPage/screen/category_page_view.dart';
 import 'package:ds_admin/app/productPage/screen/product_page_view.dart';
@@ -39,6 +40,10 @@ class RoutesClass {
 
   static List<GetPage> routes = [
     GetPage(
+      page: () => MainPageView(),
+      name: mainPage,
+    ),
+    GetPage(
       page: () => HomePageView(),
       name: homePage,
     ),
@@ -51,7 +56,7 @@ class RoutesClass {
       name: addProduct,
     ),
     GetPage(
-      page: () => CategoryPageView(),
+      page: () => const CategoryPageView(),
       name: categoryPage,
     ),
     GetPage(
