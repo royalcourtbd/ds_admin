@@ -58,7 +58,7 @@ class CategoryPageController extends GetxController {
 
   Stream<List<CategoryModel>> getCategories() => firestore
       .collection(Urls.CATEGORIES_COLLECTION)
-      .orderBy('createdAt', descending: true)
+      .orderBy('categoryName', descending: false)
       .snapshots()
       .map(
         (query) => query.docs

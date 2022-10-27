@@ -91,8 +91,13 @@ class CategoryPageView extends GetView<CategoryPageController> {
                 print(controller.categoriesList);
                 return Card(
                   child: ListTile(
-                    leading:
-                        Image.network(controller.categoriesList[index].image!),
+                    leading: SizedBox(
+                      height: 70,
+                      width: 60,
+                      child: Image.network(
+                        controller.categoriesList[index].image!,
+                      ),
+                    ),
                     title: Text(controller.categoriesList[index].categoryName!),
                     trailing: IconButton(
                       onPressed: () {

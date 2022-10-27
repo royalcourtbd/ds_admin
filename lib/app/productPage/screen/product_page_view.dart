@@ -48,7 +48,7 @@ class ProductPageView extends GetView<ProductPageController> {
                       itemBuilder: (context, index) {
                         return Card(
                           child: ListTile(
-                            onTap: () {},
+                            //onTap: () {},
                             leading: SizedBox(
                               height: 70,
                               width: 60,

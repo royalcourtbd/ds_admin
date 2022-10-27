@@ -58,7 +58,7 @@ class BrandPageController extends GetxController {
 
   Stream<List<BrandModel>> getBrands() => firestore
       .collection(Urls.BRANDS_COLLECTION)
-      .orderBy('createdAt', descending: true)
+      .orderBy('brandName', descending: false)
       .snapshots()
       .map(
         (query) => query.docs
