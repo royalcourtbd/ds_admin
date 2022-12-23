@@ -3,14 +3,18 @@ import 'package:ds_admin/app/homePage/widget/show_counter.dart';
 import 'package:ds_admin/general/routes/route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../../general/constans/constans.dart';
 import '../model/home_view_model.dart';
 
+// ignore: must_be_immutable
 class HomePageView extends GetView<HomePageController> {
+  HomePageView({Key? key}) : super(key: key);
+  GetStorage storage = GetStorage();
   var homeTitleList = [
     HomeViewModel(
-      title: 'Dashboard',
+      title: 'Category',
       icon: 'assets/icons/dashboard.png',
     ),
     HomeViewModel(
@@ -35,6 +39,12 @@ class HomePageView extends GetView<HomePageController> {
         title: const Text('Home'),
         centerTitle: true,
         actions: [
+          IconButton(
+            onPressed: () {
+              authController.signOut();
+            },
+            icon: const Icon(Icons.login),
+          ),
           Image.asset(
             'assets/icons/customers.png',
             scale: 3,
@@ -47,11 +57,11 @@ class HomePageView extends GetView<HomePageController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
               child: Text(
-                'Welcome to Admin Panel',
-                style: TextStyle(
+                storage.read('uid') ?? 'Welcome to Admin Panel',
+                style: const TextStyle(
                   fontSize: 22,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -70,9 +80,10 @@ class HomePageView extends GetView<HomePageController> {
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
-                    print(homeTitleList[index].title);
                     if (homeTitleList[index].title == 'Products') {
                       Get.toNamed(RoutesClass.getProductPageRoute());
+                    } else if (homeTitleList[index].title == 'Category') {
+                      Get.toNamed(RoutesClass.getCategoryPageRoute());
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -112,7 +123,20 @@ class HomePageView extends GetView<HomePageController> {
                                             .toString(),
                                       ),
                                     )
-                                  : Container(),
+                                  : homeTitleList[index].title == 'Category'
+                                      ? Obx(
+                                          () => ShowCounter(
+                                            showBadge: categoryPageController
+                                                        .categoriesListLength >
+                                                    0
+                                                ? true
+                                                : false,
+                                            title: categoryPageController
+                                                .categoriesListLength
+                                                .toString(),
+                                          ),
+                                        )
+                                      : Container(),
                             ],
                           ),
                           const SizedBox(

@@ -11,68 +11,76 @@ String productModelToJson(ProductModel data) => json.encode(data.toJson());
 
 class ProductModel {
   ProductModel({
-    this.docId,
-    this.productId,
-    this.productName,
-    this.category,
     this.brand,
-    this.price,
-    this.quantity,
-    this.discountPrice,
+    this.category,
+    this.createdAt,
     this.description,
+    this.discountPrice,
+    this.docId,
     this.highlights,
     this.image,
-    this.totalSell,
+    this.price,
+    this.productId,
+    this.productName,
     this.rate,
-    this.createdAt,
+    this.quantity,
+    this.totalSell,
+    this.available,
+    this.featured,
   });
 
+  String? brand;
+  String? category;
+  String? createdAt;
+  String? description;
+  String? discountPrice;
   String? docId;
+  String? highlights;
+  List<String>? image;
+  String? price;
   String? productId;
   String? productName;
-  String? category;
-  String? brand;
-  String? price;
-  String? quantity;
-  String? discountPrice;
-  String? description;
-  String? highlights;
-  String? image;
-  String? totalSell;
   String? rate;
-  String? createdAt;
+  String? quantity;
+  String? totalSell;
+  bool? available;
+  bool? featured;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
+        brand: json["brand"],
+        category: json["category"],
+        createdAt: json["createdAt"],
+        description: json["description"],
+        discountPrice: json["discountPrice"],
         docId: json["docId"],
+        highlights: json["highlights"],
+        image: List<String>.from(json["image"].map((x) => x)),
+        price: json["price"],
         productId: json["productId"],
         productName: json["productName"],
-        category: json["category"],
-        brand: json["brand"],
-        price: json["price"],
-        quantity: json["quantity"],
-        discountPrice: json["discountPrice"],
-        description: json["description"],
-        highlights: json["highlights"],
-        image: json["image"],
-        totalSell: json["totalSell"],
         rate: json["rate"],
-        createdAt: json["createdAt"],
+        quantity: json["quantity"],
+        totalSell: json["totalSell"],
+        available: json["available"],
+        featured: json["featured"],
       );
 
   Map<String, dynamic> toJson() => {
+        "brand": brand,
+        "category": category,
+        "createdAt": createdAt,
+        "description": description,
+        "discountPrice": discountPrice,
         "docId": docId,
+        "highlights": highlights,
+        "image": List<dynamic>.from(image!.map((x) => x)),
+        "price": price,
         "productId": productId,
         "productName": productName,
-        "category": category,
-        "brand": brand,
-        "price": price,
-        "quantity": quantity,
-        "discountPrice": discountPrice,
-        "description": description,
-        "highlights": highlights,
-        "image": image,
-        "totalSell": totalSell,
         "rate": rate,
-        "createdAt": createdAt,
+        "quantity": quantity,
+        "totalSell": totalSell,
+        "available": available,
+        "featured": featured,
       };
 }

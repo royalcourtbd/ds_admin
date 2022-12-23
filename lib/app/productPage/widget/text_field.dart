@@ -1,7 +1,9 @@
 import 'package:ds_admin/app/productPage/controller/product_page_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class NewTextField extends GetView<ProductPageController> {
   Function(String)? onChanged;
   Function()? onTap;
@@ -12,6 +14,8 @@ class NewTextField extends GetView<ProductPageController> {
   String hintText;
 
   FocusNode? focusNode;
+  Widget? prefixIcon;
+  List<TextInputFormatter>? inputFormatters;
 
   TextEditingController textEditingController;
 
@@ -22,6 +26,8 @@ class NewTextField extends GetView<ProductPageController> {
     this.onChanged,
     this.onSaved,
     this.onTap,
+    this.inputFormatters,
+    this.prefixIcon,
     this.keyboardType = TextInputType.text,
     required this.textEditingController,
     this.validator,
@@ -38,6 +44,7 @@ class NewTextField extends GetView<ProductPageController> {
         onTap: onTap,
         onChanged: onChanged,
         decoration: InputDecoration(
+          prefixIcon: prefixIcon,
           border: const OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.green,

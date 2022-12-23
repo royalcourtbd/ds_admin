@@ -1,6 +1,7 @@
 import 'package:ds_admin/app/homePage/screen/home_page_view.dart';
 import 'package:ds_admin/app/mainPage/screen/main_page_view.dart';
 import 'package:ds_admin/app/productPage/screen/add_product_page.dart';
+import 'package:ds_admin/app/productPage/screen/carousel_image_view.dart';
 import 'package:ds_admin/app/productPage/screen/category_page_view.dart';
 import 'package:ds_admin/app/productPage/screen/product_page_view.dart';
 import 'package:get/get.dart';
@@ -21,7 +22,7 @@ class RoutesClass {
   // static String loginPage = '/loginPage';
   // static String signUpPage = '/signUpPage';
   static String productPage = '/productPage';
-  // static String productDetailPage = '/productDetailPage';
+  static String carouselPage = '/carouselPage';
 
   static String getMainRoute() => mainPage;
   // static String getAccountPageRoute() => accountPage;
@@ -36,7 +37,7 @@ class RoutesClass {
   // static String getLoginPageRoute() => loginPage;
   // static String getSignUpPagePageRoute() => signUpPage;
   static String getProductPageRoute() => productPage;
-  // static String getProductDetailPageRoute() => productDetailPage;
+  static String getCarouselPageRoute() => carouselPage;
 
   static List<GetPage> routes = [
     GetPage(
@@ -48,11 +49,11 @@ class RoutesClass {
       name: homePage,
     ),
     GetPage(
-      page: () => ProductPageView(),
+      page: () => const ProductPageView(),
       name: productPage,
     ),
     GetPage(
-      page: () => AddProductPage(),
+      page: () => const AddProductPage(),
       name: addProduct,
     ),
     GetPage(
@@ -60,8 +61,12 @@ class RoutesClass {
       name: categoryPage,
     ),
     GetPage(
-      page: () => BrandPageView(),
+      page: () => const BrandPageView(),
       name: brandPage,
+    ),
+    GetPage(
+      page: () => CarouselImageView(),
+      name: carouselPage,
     ),
   ];
 }

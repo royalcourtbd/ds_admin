@@ -45,13 +45,10 @@ class BrandPageController extends GetxController {
     Future.delayed(const Duration(seconds: 1));
     brandNameController.clear();
     imageUrlController.clear();
-
-    print('delete');
   }
 
   @override
   void onReady() {
-    // TODO: implement onReady
     super.onReady();
     brandsList.bindStream(getBrands());
   }
@@ -61,20 +58,21 @@ class BrandPageController extends GetxController {
       .orderBy('brandName', descending: false)
       .snapshots()
       .map(
-        (query) => query.docs
-            .map((e) => BrandModel(
-                docId: e.id,
-                brandId: e['brandId'],
-                brandName: e['brandName'],
-                createdAt: e['createdAt'],
-                image: e['image']))
-            .toList(),
+        (query) => query.docs.map((e) {
+          return BrandModel(
+            docId: e.id,
+            brandId: e['brandId'],
+            brandName: e['brandName'],
+            createdAt: e['createdAt'],
+            image: e['image'],
+          );
+        }).toList(),
       );
 
   submitBrand() {
     try {
       addBrand(
-        UniqueKey().toString(),
+        UniqueKey().toString().replaceAll('[#', '').replaceAll(']', ''),
         brandNameController.text.trim(),
         DateTime.now().toString(),
         imageUrlController.text.trim(),
@@ -94,9 +92,13 @@ class BrandPageController extends GetxController {
   }
 
   addBrand(
-      String brandId, String brandName, String createdAt, String image) async {
+    String brandId,
+    String brandName,
+    String createdAt,
+    String image,
+  ) async {
     var brandItem = BrandModel(
-      docId: 'default document id',
+      docId: 'testId',
       brandId: brandId,
       brandName: brandName,
       createdAt: createdAt,

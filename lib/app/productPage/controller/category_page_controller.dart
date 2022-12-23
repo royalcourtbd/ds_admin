@@ -15,6 +15,7 @@ class CategoryPageController extends GetxController {
 
   TextEditingController categoryNameController = TextEditingController();
   TextEditingController categoryImageController = TextEditingController();
+  TextEditingController bgColorController = TextEditingController();
   GlobalKey<FormState> addCategoryKey = GlobalKey<FormState>(debugLabel: '');
 
   categoryNameValidation(value) {
@@ -45,13 +46,11 @@ class CategoryPageController extends GetxController {
     Future.delayed(const Duration(seconds: 1));
     categoryNameController.clear();
     categoryImageController.clear();
-
-    print('delete');
+    bgColorController.clear();
   }
 
   @override
   void onReady() {
-    // TODO: implement onReady
     super.onReady();
     categoriesList.bindStream(getCategories());
   }
@@ -65,6 +64,7 @@ class CategoryPageController extends GetxController {
             .map((e) => CategoryModel(
                 docId: e.id,
                 categoryId: e['categoryId'],
+                bgColor: e['bgColor'],
                 categoryName: e['categoryName'],
                 createdAt: e['createdAt'],
                 image: e['image']))
@@ -74,7 +74,8 @@ class CategoryPageController extends GetxController {
   submitCategory() {
     try {
       addCategory(
-        UniqueKey().toString(),
+        UniqueKey().toString().replaceAll('[#', '').replaceAll(']', ''),
+        'bgColorController.text.trim()',
         categoryNameController.text.trim(),
         DateTime.now().toString(),
         categoryImageController.text.trim(),
@@ -94,11 +95,12 @@ class CategoryPageController extends GetxController {
     }
   }
 
-  addCategory(String categoryId, String categoryName, String createdAt,
-      String image) async {
+  addCategory(String categoryId, String bgColor, String categoryName,
+      String createdAt, String image) async {
     var categoryItem = CategoryModel(
       docId: 'default document id',
       categoryId: categoryId,
+      bgColor: bgColor,
       categoryName: categoryName,
       createdAt: createdAt,
       image: image,

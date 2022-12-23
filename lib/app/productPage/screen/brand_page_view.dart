@@ -7,6 +7,8 @@ import '../controller/brand_page_controller.dart';
 import '../widget/text_field.dart';
 
 class BrandPageView extends GetView<BrandPageController> {
+  const BrandPageView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Config().init(context);
@@ -86,7 +88,6 @@ class BrandPageView extends GetView<BrandPageController> {
               shrinkWrap: true,
               itemCount: controller.brandsList.length,
               itemBuilder: (context, index) {
-                print(controller.brandsList);
                 return Card(
                   child: ListTile(
                     leading: SizedBox(

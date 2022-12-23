@@ -1,8 +1,14 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:ds_admin/app/productPage/model/product_model.dart';
 import 'package:ds_admin/general/constans/constans.dart';
 import 'package:ds_admin/general/constans/url.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProductPageController extends GetxController {
   static ProductPageController instance = Get.find();
@@ -16,14 +22,12 @@ class ProductPageController extends GetxController {
   TextEditingController quantityController = TextEditingController();
   TextEditingController discountPriceController = TextEditingController();
   TextEditingController highlightsController = TextEditingController();
-  TextEditingController imageController = TextEditingController();
 
   GlobalKey<FormState> addProductKey =
       GlobalKey<FormState>(debugLabel: 'addProductFormKey');
 
   @override
   void onReady() {
-    // TODO: implement onReady
     super.onReady();
     allProductsList.bindStream(getProducts());
   }
@@ -49,12 +53,12 @@ class ProductPageController extends GetxController {
     return null;
   }
 
-  imageUrlValidation(value) {
-    if (value.isEmpty) {
-      return 'Please Enter Image Url';
-    }
-    return null;
-  }
+  // imageUrlValidation(value) {
+  //   if (value.isEmpty) {
+  //     return 'Please Enter Image Url';
+  //   }
+  //   return null;
+  // }
 
   quantityValidation(value) {
     if (value.isEmpty) {
@@ -83,6 +87,7 @@ class ProductPageController extends GetxController {
       return;
     }
     addProductKey.currentState!.save();
+    EasyLoading.show(status: 'Please Wait');
     addProductButton();
   }
 
@@ -93,43 +98,60 @@ class ProductPageController extends GetxController {
     priceController.clear();
     quantityController.clear();
     discountPriceController.clear();
-    imageController.clear();
-    highlightsController.clear();
 
-    print('delete');
+    highlightsController.clear();
+  }
+
+  final isUploading = RxBool(false);
+  final imageUrl = RxString('');
+  final ImageSource _imageSource = ImageSource.gallery;
+
+  Future<String> updateImage(XFile xFile) async {
+    final imageName = DateTime.now().millisecondsSinceEpoch.toString();
+    final photoRef = FirebaseStorage.instance.ref().child(imageName);
+    final uploadTask = photoRef.putFile(File(xFile.path));
+    final snapshot = await uploadTask.whenComplete(() => null);
+    print('image download link$imageUrl');
+    return snapshot.ref.getDownloadURL();
+  }
+
+  void getImage() async {
+    final selectedImage = await ImagePicker().pickImage(source: _imageSource);
+    if (selectedImage != null) {
+      isUploading.value = true;
+
+      try {
+        final url = await updateImage(selectedImage);
+
+        imageUrl.value = url;
+        log(url);
+        isUploading.value = false;
+      } catch (e) {
+        //
+      } finally {}
+    }
   }
 
 //fetch Data from firebase
+
   Stream<List<ProductModel>> getProducts() => firestore
-      .collection(Urls.PRODUCTS_COLLECTION)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (query) => query.docs
-            .map(
-              (eatchItem) => ProductModel(
-                docId: eatchItem.id,
-                productName: eatchItem["productName"],
-                image: eatchItem["image"],
-                price: eatchItem['price'],
-                discountPrice: eatchItem['discountPrice'],
-                productId: eatchItem['productId'],
-                category: eatchItem['category'],
-                brand: eatchItem['brand'],
-                createdAt: eatchItem['createdAt'],
-                description: eatchItem['description'],
-                quantity: eatchItem['quantity'],
-                rate: eatchItem['rate'],
-                highlights: eatchItem['highlights'],
-                totalSell: eatchItem['totalSell'],
-              ),
-            )
-            .toList(),
+          .collection(Urls.PRODUCTS_COLLECTION)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+        (query) {
+          return query.docs
+              .map(
+                (item) => ProductModel.fromJson(item.data()),
+              )
+              .toList();
+        },
       );
 
   addProductButton() async {
     try {
       Future.delayed(const Duration(seconds: 1));
+
       Get.dialog(
         const AlertDialog(
           title: Center(
@@ -141,7 +163,9 @@ class ProductPageController extends GetxController {
         categoryPageController.selectCategory.value,
         brandPageController.selectBrand.value,
         productNameController.text.trim(),
-        imageController.text.trim(),
+        [
+          imageUrl.value,
+        ],
         descriptionController.text.trim(),
         highlightsController.text.trim(),
         discountPriceController.text.trim(),
@@ -158,6 +182,9 @@ class ProductPageController extends GetxController {
         'product added to tha Product List',
         snackPosition: SnackPosition.BOTTOM,
       );
+
+      imageUrl.value = '';
+      EasyLoading.dismiss(animation: false);
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -174,7 +201,7 @@ class ProductPageController extends GetxController {
     String category,
     String brand,
     String productName,
-    String image,
+    List<String> image,
     String description,
     String highlights,
     String discountPrice,
@@ -184,9 +211,14 @@ class ProductPageController extends GetxController {
     String totalSell,
     String rate,
   ) async {
+    final id = firestore.collection(Urls.PRODUCTS_COLLECTION).doc().id;
+    final docRef = firestore.collection(Urls.PRODUCTS_COLLECTION).doc(id);
     var singleItem = ProductModel(
-      productId: UniqueKey().toString(),
-      docId: "default document id",
+      featured: false,
+      available: true,
+      productId:
+          UniqueKey().toString().replaceAll('[#', '').replaceAll(']', ''),
+      docId: id,
       category: category,
       brand: brand,
       productName: productName,
@@ -201,9 +233,11 @@ class ProductPageController extends GetxController {
       rate: rate,
     );
 
-    await firestore.collection(Urls.PRODUCTS_COLLECTION).add(
-          singleItem.toJson(),
-        );
+    // await firestore.collection(Urls.PRODUCTS_COLLECTION).add(
+    //       singleItem.toJson(),
+    //     );
+
+    await docRef.set(singleItem.toJson());
   }
 
   deleteProduct(String id) async {

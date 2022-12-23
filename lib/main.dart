@@ -1,7 +1,9 @@
+import 'package:ds_admin/app/mainPage/screen/main_page_view.dart';
 import 'package:ds_admin/bindings/all_controller_binding.dart';
 import 'package:ds_admin/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 import 'general/routes/route.dart';
@@ -26,8 +28,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      // home: HomePageView(),
-      initialRoute: RoutesClass.getMainRoute(),
+      builder: EasyLoading.init(),
+      home: MainPageView(),
+      // initialRoute: RoutesClass.getMainRoute(),
       getPages: RoutesClass.routes,
       initialBinding: AllControllerBinding(),
     );

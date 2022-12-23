@@ -2,8 +2,8 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ds_admin/app/homePage/screen/home_page_view.dart';
 import 'package:ds_admin/app/mainPage/controller/main_page_controller.dart';
-import 'package:ds_admin/app/productPage/screen/add_product_page.dart';
-import 'package:ds_admin/app/productPage/screen/product_page_view.dart';
+import 'package:ds_admin/app/productPage/screen/brand_page_view.dart';
+import 'package:ds_admin/app/productPage/screen/carousel_image_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -20,8 +20,8 @@ class MainPageView extends GetView<MainPageController> {
   ];
 
   final List<Widget> pages = [
-    AddProductPage(),
-    ProductPageView(),
+    CarouselImageView(),
+    const BrandPageView(),
     HomePageView(),
   ];
 
@@ -34,7 +34,10 @@ class MainPageView extends GetView<MainPageController> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blueAccent,
-        child: const Icon(Icons.home),
+        child: Image.asset(
+          'assets/icons/logo.png',
+          fit: BoxFit.fill,
+        ),
         onPressed: () {
           controller.currentIndex.value = 2;
         },

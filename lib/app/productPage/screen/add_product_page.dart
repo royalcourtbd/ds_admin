@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:ds_admin/app/productPage/controller/product_page_controller.dart';
 import 'package:ds_admin/app/productPage/model/brand_model.dart';
 import 'package:ds_admin/general/constans/constans.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:get/get.dart';
 
 import '../../../general/utils/config.dart';
@@ -9,6 +13,8 @@ import '../model/category_model.dart';
 import '../widget/text_field.dart';
 
 class AddProductPage extends GetView<ProductPageController> {
+  const AddProductPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Config().init(context);
@@ -20,8 +26,43 @@ class AddProductPage extends GetView<ProductPageController> {
           key: controller.addProductKey,
           child: Column(
             children: [
+              Obx(
+                () => Card(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                  elevation: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: productPageController.imageUrl.value != ''
+                        ? Image.network(
+                            productPageController.imageUrl.value,
+                            height: 200,
+                            width: 200,
+                            fit: BoxFit.contain,
+                          )
+                        : productPageController.isUploading.value
+                            ? const CircularProgressIndicator(
+                                //color: Colors.white,
+                                )
+                            : const Icon(
+                                Icons.photo,
+                                size: 110,
+                              ),
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  productPageController.getImage();
+                },
+                child: const Text(
+                  'image',
+                ),
+              ),
               NewTextField(
                 hintText: 'Product Name',
+                prefixIcon: const Icon(Icons.shopping_bag_outlined),
                 textEditingController: controller.productNameController,
                 validator: (value) {
                   return controller.productNameValidation(value!);
@@ -62,7 +103,8 @@ class AddProductPage extends GetView<ProductPageController> {
                             value.toString();
                         categoryPageController.categoryIndex.value =
                             categoryPageController.categoriesList.indexWhere(
-                                (element) => element.categoryName == value);
+                          (element) => element.categoryName == value,
+                        );
                       },
                     ),
                   ),
@@ -112,6 +154,10 @@ class AddProductPage extends GetView<ProductPageController> {
                 hintText: 'Price',
                 textEditingController: controller.priceController,
                 keyboardType: TextInputType.number,
+                prefixIcon: const Icon(Icons.attach_money),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 validator: (value) {
                   return controller.priceValidation(value!);
                 },
@@ -120,19 +166,27 @@ class AddProductPage extends GetView<ProductPageController> {
                 hintText: 'Discount Price',
                 textEditingController: controller.discountPriceController,
                 keyboardType: TextInputType.number,
+                prefixIcon: const Icon(Icons.price_change),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 validator: (value) {
                   return controller.discountPriceValidation(value!);
                 },
               ),
-              NewTextField(
-                hintText: 'Image Url',
-                textEditingController: controller.imageController,
-                validator: (value) {
-                  return controller.imageUrlValidation(value!);
-                },
-              ),
+              // NewTextField(
+              //   hintText: 'Image Url',
+              //   textEditingController: controller.imageController,
+              //   validator: (value) {
+              //     return controller.imageUrlValidation(value!);
+              //   },
+              // ),
               NewTextField(
                 hintText: 'Quantity',
+                prefixIcon: const Icon(Icons.production_quantity_limits),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 textEditingController: controller.quantityController,
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -142,6 +196,7 @@ class AddProductPage extends GetView<ProductPageController> {
               NewTextField(
                 hintText: 'Description',
                 textEditingController: controller.descriptionController,
+                prefixIcon: const Icon(Icons.description),
                 validator: (value) {
                   return controller.descriptionValidation(value!);
                 },
@@ -149,6 +204,7 @@ class AddProductPage extends GetView<ProductPageController> {
               NewTextField(
                 hintText: 'Highlights',
                 textEditingController: controller.highlightsController,
+                prefixIcon: const Icon(Icons.highlight),
                 validator: (value) {
                   return controller.highlightsValidation(value!);
                 },
@@ -156,7 +212,16 @@ class AddProductPage extends GetView<ProductPageController> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(),
                 onPressed: () {
-                  controller.addToProductButton();
+                  if (controller.imageUrl.value == '') {
+                    Get.snackbar(
+                      'Empty Image',
+                      'Please Select an Image',
+                      snackPosition: SnackPosition.BOTTOM,
+                    );
+                    log('Please select an image');
+                  } else {
+                    controller.addToProductButton();
+                  }
                 },
                 child: const Text('Add Product'),
               ),

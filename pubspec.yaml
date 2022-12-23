@@ -52,6 +52,10 @@ dependencies:
   image_picker: ^0.8.6
   badges: ^2.0.3
   animated_bottom_navigation_bar: ^1.1.0
+  carousel_slider: ^4.1.1
+  easy_loading: ^0.0.4
+  flutter_easyloading: ^3.0.5
+  fancy_shimmer_image: ^2.0.2
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +80,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/icons/
+    - assets/images/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

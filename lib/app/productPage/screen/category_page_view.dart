@@ -51,6 +51,13 @@ class CategoryPageView extends GetView<CategoryPageController> {
                             },
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: NewTextField(
+                            hintText: 'Color name',
+                            textEditingController: controller.bgColorController,
+                          ),
+                        ),
                         const SizedBox(
                           height: 50,
                         ),
@@ -88,10 +95,10 @@ class CategoryPageView extends GetView<CategoryPageController> {
               shrinkWrap: true,
               itemCount: controller.categoriesList.length,
               itemBuilder: (context, index) {
-                print(controller.categoriesList);
                 return Card(
                   child: ListTile(
-                    leading: SizedBox(
+                    leading: Container(
+                      color: const Color(0xff454f15).withOpacity(0.1),
                       height: 70,
                       width: 60,
                       child: Image.network(
