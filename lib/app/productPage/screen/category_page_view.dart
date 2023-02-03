@@ -1,5 +1,7 @@
 import 'package:ds_admin/app/productPage/controller/category_page_controller.dart';
 import 'package:ds_admin/app/productPage/widget/text_field.dart';
+import 'package:ds_admin/general/constans/constans.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -21,6 +23,7 @@ class CategoryPageView extends GetView<CategoryPageController> {
           InkWell(
             onTap: () {
               showModalBottomSheet(
+                isScrollControlled: true,
                 context: context,
                 builder: (context) {
                   return Form(
@@ -29,6 +32,42 @@ class CategoryPageView extends GetView<CategoryPageController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        Obx(
+                          () => Card(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                            ),
+                            elevation: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: categoryPageController.imageUrl.value != ''
+                                  ? Image.network(
+                                      categoryPageController.imageUrl.value,
+                                      height: 150,
+                                      width: 110,
+                                      fit: BoxFit.contain,
+                                    )
+                                  : categoryPageController.isUploading.value
+                                      ? const CircularProgressIndicator(
+                                          //color: Colors.white,
+                                          )
+                                      : const Icon(
+                                          Icons.photo,
+                                          size: 110,
+                                        ),
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            categoryPageController.imageUrl.value = '';
+                            categoryPageController.categoryImage();
+                          },
+                          child: const Text(
+                            'Upload Image',
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: NewTextField(
@@ -38,17 +77,6 @@ class CategoryPageView extends GetView<CategoryPageController> {
                             hintText: 'Category Name',
                             textEditingController:
                                 controller.categoryNameController,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: NewTextField(
-                            hintText: 'Image Url',
-                            textEditingController:
-                                controller.categoryImageController,
-                            validator: (value) {
-                              return controller.imageUrlValidation(value!);
-                            },
                           ),
                         ),
                         Padding(
@@ -98,16 +126,34 @@ class CategoryPageView extends GetView<CategoryPageController> {
                 return Card(
                   child: ListTile(
                     leading: Container(
-                      color: const Color(0xff454f15).withOpacity(0.1),
+                      decoration: BoxDecoration(
+                        // color: Colors.red,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
                       height: 70,
                       width: 60,
-                      child: Image.network(
-                        controller.categoriesList[index].image!,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: FancyShimmerImage(
+                          boxFit: BoxFit.fill,
+                          errorWidget: Image.asset('assets/images/loading.jpg'),
+                          imageUrl: controller.categoriesList[index].image!,
+                        ),
                       ),
                     ),
+                    // leading: Container(
+                    //   color: const Color(0xff454f15).withOpacity(0.1),
+                    //   height: 70,
+                    //   width: 60,
+                    //   child: Image.network(
+                    //     controller.categoriesList[index].image!,
+                    //   ),
+                    // ),
                     title: Text(controller.categoriesList[index].categoryName!),
                     trailing: IconButton(
                       onPressed: () {
+                        print(
+                            controller.categoriesList[index].docId.toString());
                         controller.deleteCategory(
                             controller.categoriesList[index].docId.toString());
                       },

@@ -3,7 +3,6 @@ import 'package:ds_admin/app/homePage/widget/show_counter.dart';
 import 'package:ds_admin/general/routes/route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 import '../../../general/constans/constans.dart';
 import '../model/home_view_model.dart';
@@ -11,7 +10,7 @@ import '../model/home_view_model.dart';
 // ignore: must_be_immutable
 class HomePageView extends GetView<HomePageController> {
   HomePageView({Key? key}) : super(key: key);
-  GetStorage storage = GetStorage();
+
   var homeTitleList = [
     HomeViewModel(
       title: 'Category',
@@ -28,6 +27,22 @@ class HomePageView extends GetView<HomePageController> {
     HomeViewModel(
       title: 'Orders',
       icon: 'assets/icons/orders.png',
+    ),
+    HomeViewModel(
+      title: 'Banner',
+      icon: 'assets/icons/placard.png',
+    ),
+    HomeViewModel(
+      title: 'Brand',
+      icon: 'assets/icons/brand.png',
+    ),
+    HomeViewModel(
+      title: 'Settings',
+      icon: 'assets/icons/settings.png',
+    ),
+    HomeViewModel(
+      title: 'Reports',
+      icon: 'assets/icons/report.png',
     ),
   ];
 
@@ -51,7 +66,6 @@ class HomePageView extends GetView<HomePageController> {
           )
         ],
       ),
-      drawer: Container(),
       backgroundColor: Colors.green,
       body: SingleChildScrollView(
         child: Column(
@@ -60,7 +74,9 @@ class HomePageView extends GetView<HomePageController> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
               child: Text(
-                storage.read('uid') ?? 'Welcome to Admin Panel',
+                auth.currentUser == null
+                    ? 'Welcome To Admin Panel'
+                    : auth.currentUser!.uid,
                 style: const TextStyle(
                   fontSize: 22,
                   color: Colors.white,
@@ -84,6 +100,12 @@ class HomePageView extends GetView<HomePageController> {
                       Get.toNamed(RoutesClass.getProductPageRoute());
                     } else if (homeTitleList[index].title == 'Category') {
                       Get.toNamed(RoutesClass.getCategoryPageRoute());
+                    } else if (homeTitleList[index].title == 'Banner') {
+                      Get.toNamed(RoutesClass.getCarouselPageRoute());
+                    } else if (homeTitleList[index].title == 'Brand') {
+                      Get.toNamed(RoutesClass.getBrandPageRoute());
+                    } else if (homeTitleList[index].title == 'Settings') {
+                      Get.toNamed(RoutesClass.getSettingPageRoute());
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -136,7 +158,34 @@ class HomePageView extends GetView<HomePageController> {
                                                 .toString(),
                                           ),
                                         )
-                                      : Container(),
+                                      : homeTitleList[index].title == 'Banner'
+                                          ? Obx(
+                                              () => ShowCounter(
+                                                title: carouselPageController
+                                                    .carouselListLength
+                                                    .toString(),
+                                                showBadge: carouselPageController
+                                                            .carouselListLength >
+                                                        0
+                                                    ? true
+                                                    : false,
+                                              ),
+                                            )
+                                          : homeTitleList[index].title ==
+                                                  'Brand'
+                                              ? Obx(
+                                                  () => ShowCounter(
+                                                    title: brandPageController
+                                                        .brandsListLength
+                                                        .toString(),
+                                                    showBadge: brandPageController
+                                                                .brandsListLength >
+                                                            0
+                                                        ? true
+                                                        : false,
+                                                  ),
+                                                )
+                                              : Container(),
                             ],
                           ),
                           const SizedBox(

@@ -19,4 +19,6 @@ class Urls {
   static const CART_COLLECTION = 'Cart';
   static const CATEGORY_COLLECTION = 'categories';
   static const ADDRESS_COLLECTION = 'address';
+  static const SettingsCollection = 'Settings';
+  static const OrderProducts = 'OrderProducts';
 }

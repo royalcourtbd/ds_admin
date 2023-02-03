@@ -8,6 +8,7 @@ import 'package:ds_admin/app/productPage/controller/brand_page_controller.dart';
 import 'package:ds_admin/app/productPage/controller/carousel_page_controller.dart';
 import 'package:ds_admin/app/productPage/controller/category_page_controller.dart';
 import 'package:ds_admin/app/productPage/controller/product_page_controller.dart';
+import 'package:ds_admin/app/settingsPage/controller/setting_page_controller.dart';
 import 'package:get/get.dart';
 
 class AllControllerBinding implements Bindings {
@@ -47,9 +48,12 @@ class AllControllerBinding implements Bindings {
       () => AuthController(),
       fenix: true,
     );
-    Get.lazyPut<ProductDetailsPageController>(
-      () => ProductDetailsPageController(),
+    Get.lazyPut<SettingsPageController>(
+      () => SettingsPageController(),
       fenix: true,
     );
+    Get.lazyPut<ProductDetailsPageController>(
+        () => ProductDetailsPageController(),
+        fenix: true);
   }
 }

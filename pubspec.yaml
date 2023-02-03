@@ -56,6 +56,7 @@ dependencies:
   easy_loading: ^0.0.4
   flutter_easyloading: ^3.0.5
   fancy_shimmer_image: ^2.0.2
+  flutter_colorpicker: ^1.0.3
 
 dev_dependencies:
   flutter_test:

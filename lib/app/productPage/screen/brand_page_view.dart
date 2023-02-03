@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -90,11 +91,20 @@ class BrandPageView extends GetView<BrandPageController> {
               itemBuilder: (context, index) {
                 return Card(
                   child: ListTile(
-                    leading: SizedBox(
+                    leading: Container(
+                      decoration: BoxDecoration(
+                        // color: Colors.red,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
                       height: 70,
                       width: 60,
-                      child: Image.network(
-                        controller.brandsList[index].image!,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: FancyShimmerImage(
+                          boxFit: BoxFit.fill,
+                          errorWidget: Image.asset('assets/images/loading.jpg'),
+                          imageUrl: controller.brandsList[index].image!,
+                        ),
                       ),
                     ),
                     title: Text(controller.brandsList[index].brandName!),

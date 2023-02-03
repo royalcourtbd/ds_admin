@@ -97,14 +97,17 @@ class BrandPageController extends GetxController {
     String createdAt,
     String image,
   ) async {
+    final id = firestore.collection(Urls.BRANDS_COLLECTION).doc().id;
+    final docRef = firestore.collection(Urls.BRANDS_COLLECTION).doc(id);
     var brandItem = BrandModel(
-      docId: 'testId',
+      docId: id,
       brandId: brandId,
       brandName: brandName,
       createdAt: createdAt,
       image: image,
     );
-    await firestore.collection(Urls.BRANDS_COLLECTION).add(brandItem.toJson());
+    //await firestore.collection(Urls.BRANDS_COLLECTION).add(brandItem.toJson());
+    await docRef.set(brandItem.toJson());
   }
 
   deleteBrand(String id) async {

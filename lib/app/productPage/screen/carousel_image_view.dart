@@ -1,5 +1,6 @@
 import 'package:ds_admin/app/productPage/controller/carousel_page_controller.dart';
-import 'package:ds_admin/app/productPage/widget/text_field.dart';
+import 'package:ds_admin/general/constans/constans.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -26,11 +27,39 @@ class CarouselImageView extends GetView<CarouselPageController> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: NewTextField(
-                          hintText: 'Image Url',
-                          textEditingController: controller.imageUrlController,
+                      Obx(
+                        () => Card(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          elevation: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: carouselPageController.imageUrl.value != ''
+                                ? Image.network(
+                                    carouselPageController.imageUrl.value,
+                                    height: 150,
+                                    width: 110,
+                                    fit: BoxFit.contain,
+                                  )
+                                : carouselPageController.isUploading.value
+                                    ? const CircularProgressIndicator(
+                                        //color: Colors.white,
+                                        )
+                                    : const Icon(
+                                        Icons.photo,
+                                        size: 110,
+                                      ),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          carouselPageController.imageUrl.value = '';
+                          carouselPageController.carouselImage();
+                        },
+                        child: const Text(
+                          'Add Image',
                         ),
                       ),
                       const SizedBox(
@@ -67,32 +96,35 @@ class CarouselImageView extends GetView<CarouselPageController> {
           Obx(
             () => ListView.builder(
               shrinkWrap: true,
-              itemCount: controller.testPath.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  child: Center(
-                    child: Text(controller.testPath[index].path.toString()),
-                  ),
-                );
-              },
-            ),
-          ),
-          Obx(
-            () => ListView.builder(
-              shrinkWrap: true,
               itemCount: controller.carouselList.length,
               itemBuilder: (context, index) {
                 return Card(
                   child: ListTile(
                     leading: Container(
-                      color: const Color(0xff454f15).withOpacity(0.1),
+                      decoration: BoxDecoration(
+                        // color: Colors.red,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
                       height: 70,
                       width: 60,
-                      child: Image.network(
-                        controller.carouselList[index].imagePath!,
-                        fit: BoxFit.fitHeight,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: FancyShimmerImage(
+                          boxFit: BoxFit.fill,
+                          errorWidget: Image.asset('assets/images/loading.jpg'),
+                          imageUrl: controller.carouselList[index].imagePath!,
+                        ),
                       ),
                     ),
+                    // leading: Container(
+                    //   color: const Color(0xff454f15).withOpacity(0.1),
+                    //   height: 70,
+                    //   width: 60,
+                    //   child: Image.network(
+                    //     controller.carouselList[index].imagePath!,
+                    //     fit: BoxFit.fitHeight,
+                    //   ),
+                    // ),
                     title: Text(
                       'docId : ${controller.carouselList[index].docId!}',
                     ),

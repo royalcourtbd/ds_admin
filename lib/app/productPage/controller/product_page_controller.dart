@@ -12,7 +12,8 @@ import 'package:image_picker/image_picker.dart';
 
 class ProductPageController extends GetxController {
   static ProductPageController instance = Get.find();
-  RxList allProductsList = [].obs;
+  final allProductsList = RxList<ProductModel>([]);
+  final selectedProduct = Rx<ProductModel?>(null);
 
   int get productListLength => allProductsList.length;
 
@@ -52,13 +53,6 @@ class ProductPageController extends GetxController {
     }
     return null;
   }
-
-  // imageUrlValidation(value) {
-  //   if (value.isEmpty) {
-  //     return 'Please Enter Image Url';
-  //   }
-  //   return null;
-  // }
 
   quantityValidation(value) {
     if (value.isEmpty) {
@@ -103,19 +97,25 @@ class ProductPageController extends GetxController {
   }
 
   final isUploading = RxBool(false);
-  final imageUrl = RxString('');
+  final isUploading1 = RxBool(false);
+  final isUploading2 = RxBool(false);
+  final mainImageUrl = RxString('');
+  final optionalUrl1 = RxString('');
+  final optionalUrl2 = RxString('');
   final ImageSource _imageSource = ImageSource.gallery;
 
   Future<String> updateImage(XFile xFile) async {
     final imageName = DateTime.now().millisecondsSinceEpoch.toString();
-    final photoRef = FirebaseStorage.instance.ref().child(imageName);
+
+    final photoRef =
+        FirebaseStorage.instance.ref().child('Products Image/$imageName');
     final uploadTask = photoRef.putFile(File(xFile.path));
     final snapshot = await uploadTask.whenComplete(() => null);
-    print('image download link$imageUrl');
+
     return snapshot.ref.getDownloadURL();
   }
 
-  void getImage() async {
+  void mainImage() async {
     final selectedImage = await ImagePicker().pickImage(source: _imageSource);
     if (selectedImage != null) {
       isUploading.value = true;
@@ -123,9 +123,43 @@ class ProductPageController extends GetxController {
       try {
         final url = await updateImage(selectedImage);
 
-        imageUrl.value = url;
+        mainImageUrl.value = url;
         log(url);
         isUploading.value = false;
+      } catch (e) {
+        //
+      } finally {}
+    }
+  }
+
+  void optionalImage1() async {
+    final selectedImage = await ImagePicker().pickImage(source: _imageSource);
+    if (selectedImage != null) {
+      isUploading1.value = true;
+
+      try {
+        final url = await updateImage(selectedImage);
+
+        optionalUrl1.value = url;
+        log(url);
+        isUploading1.value = false;
+      } catch (e) {
+        //
+      } finally {}
+    }
+  }
+
+  void optionalImage2() async {
+    final selectedImage = await ImagePicker().pickImage(source: _imageSource);
+    if (selectedImage != null) {
+      isUploading2.value = true;
+
+      try {
+        final url = await updateImage(selectedImage);
+
+        optionalUrl2.value = url;
+        log(url);
+        isUploading2.value = false;
       } catch (e) {
         //
       } finally {}
@@ -159,22 +193,80 @@ class ProductPageController extends GetxController {
           ),
         ),
       );
-      addProduct(
-        categoryPageController.selectCategory.value,
-        brandPageController.selectBrand.value,
-        productNameController.text.trim(),
-        [
-          imageUrl.value,
-        ],
-        descriptionController.text.trim(),
-        highlightsController.text.trim(),
-        discountPriceController.text.trim(),
-        DateTime.now().toString(),
-        priceController.text.trim(),
-        quantityController.text.trim(),
-        '0',
-        0.toString(),
-      );
+      if (optionalUrl1.value == '' && optionalUrl2.value == '') {
+        addProduct(
+          categoryPageController.selectCategory.value,
+          brandPageController.selectBrand.value,
+          productNameController.text.trim(),
+          [
+            mainImageUrl.value,
+          ],
+          descriptionController.text.trim(),
+          highlightsController.text.trim(),
+          double.parse(discountPriceController.text.trim()),
+          DateTime.now().toString(),
+          double.parse(priceController.text.trim()),
+          int.parse(quantityController.text.trim()),
+          0,
+          0,
+        );
+      } else if (optionalUrl2.value == '') {
+        addProduct(
+          categoryPageController.selectCategory.value,
+          brandPageController.selectBrand.value,
+          productNameController.text.trim(),
+          [
+            mainImageUrl.value,
+            optionalUrl1.value,
+          ],
+          descriptionController.text.trim(),
+          highlightsController.text.trim(),
+          double.parse(discountPriceController.text.trim()),
+          DateTime.now().toString(),
+          double.parse(priceController.text.trim()),
+          int.parse(quantityController.text.trim()),
+          0,
+          0,
+        );
+      } else if (optionalUrl1.value == '') {
+        addProduct(
+          categoryPageController.selectCategory.value,
+          brandPageController.selectBrand.value,
+          productNameController.text.trim(),
+          [
+            mainImageUrl.value,
+            optionalUrl2.value,
+          ],
+          descriptionController.text.trim(),
+          highlightsController.text.trim(),
+          double.parse(discountPriceController.text.trim()),
+          DateTime.now().toString(),
+          double.parse(priceController.text.trim()),
+          int.parse(quantityController.text.trim()),
+          0,
+          0,
+        );
+      } else {
+        addProduct(
+          categoryPageController.selectCategory.value,
+          brandPageController.selectBrand.value,
+          productNameController.text.trim(),
+          [
+            mainImageUrl.value,
+            optionalUrl1.value,
+            optionalUrl2.value,
+          ],
+          descriptionController.text.trim(),
+          highlightsController.text.trim(),
+          double.parse(discountPriceController.text.trim()),
+          DateTime.now().toString(),
+          double.parse(priceController.text.trim()),
+          int.parse(quantityController.text.trim()),
+          0,
+          0,
+        );
+      }
+
       clearController();
       Get.back();
       Get.snackbar(
@@ -183,7 +275,10 @@ class ProductPageController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
 
-      imageUrl.value = '';
+      mainImageUrl.value = '';
+      optionalUrl1.value = '';
+      optionalUrl2.value = '';
+
       EasyLoading.dismiss(animation: false);
     } catch (e) {
       Get.snackbar(
@@ -204,12 +299,12 @@ class ProductPageController extends GetxController {
     List<String> image,
     String description,
     String highlights,
-    String discountPrice,
+    double discountPrice,
     String createdAt,
-    String price,
-    String quantity,
-    String totalSell,
-    String rate,
+    double price,
+    int quantity,
+    int totalSell,
+    double rate,
   ) async {
     final id = firestore.collection(Urls.PRODUCTS_COLLECTION).doc().id;
     final docRef = firestore.collection(Urls.PRODUCTS_COLLECTION).doc(id);

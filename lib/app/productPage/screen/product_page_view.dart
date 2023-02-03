@@ -1,6 +1,8 @@
 import 'package:ds_admin/app/productDetailsPage/screen/product_view.dart';
 import 'package:ds_admin/app/productPage/controller/product_page_controller.dart';
+import 'package:ds_admin/general/constans/constans.dart';
 import 'package:ds_admin/general/utils/config.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -50,25 +52,31 @@ class ProductPageView extends GetView<ProductPageController> {
                       itemBuilder: (context, index) {
                         return Card(
                           child: ListTile(
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 10),
                             onTap: () {
-                              Get.to(ProductView(
-                                productValue: controller.allProductsList[index],
-                              ));
+                              productPageController.selectedProduct.value =
+                                  controller.allProductsList[index];
+                              Get.to(() => ProductView());
                             },
-                            leading: SizedBox(
-                              height: 70,
-                              width: 60,
-                              child: Image.network(
-                                controller.allProductsList[index].image[0],
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: FancyShimmerImage(
+                                boxFit: BoxFit.fill,
+                                errorWidget:
+                                    Image.asset('assets/images/loading.jpg'),
+                                imageUrl:
+                                    controller.allProductsList[index].image![0],
+                                width: 60,
                               ),
                             ),
                             title: Text(
-                              controller.allProductsList[index].productName,
+                              controller.allProductsList[index].productName!,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color:
-                                    controller.allProductsList[index].available
+                                    controller.allProductsList[index].available!
                                         ? Colors.black
                                         : Colors.red,
                               ),
@@ -77,7 +85,8 @@ class ProductPageView extends GetView<ProductPageController> {
                               onPressed: () {
                                 controller.deleteProduct(
                                   // ignore: invalid_use_of_protected_member
-                                  controller.allProductsList.value[index].docId,
+                                  controller
+                                      .allProductsList.value[index].docId!,
                                 );
                               },
                               icon: const Icon(Icons.delete),
@@ -85,46 +94,56 @@ class ProductPageView extends GetView<ProductPageController> {
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                const SizedBox(
+                                  height: 5,
+                                ),
                                 Text(
                                   // ignore: prefer_interpolation_to_compose_strings
-                                  controller.allProductsList[index].available
+                                  controller.allProductsList[index].available!
                                       ? 'Status : Active'
                                       : 'Status : Inactive',
                                   style: TextStyle(
                                     color: controller
-                                            .allProductsList[index].available
+                                            .allProductsList[index].available!
                                         ? Colors.black
                                         : Colors.red,
                                   ),
                                 ),
-
-                                // Text(
-                                //   '${DateFormat('dd/MMM/yyyy').format(
-                                //     DateTime.parse(
-                                //       controller
-                                //           .allProductsList[index].createdAt,
-                                //     ),
-                                //   )} at ${DateFormat('hh:mm a').format(
-                                //     DateTime.parse(
-                                //       controller
-                                //           .allProductsList[index].createdAt,
-                                //     ),
-                                //   )}',
-                                // ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
                                 Text(
-                                  'Stock : ${controller.allProductsList[index].quantity!}',
+                                  // ignore: prefer_interpolation_to_compose_strings
+                                  controller.allProductsList[index].featured!
+                                      ? 'Featured : True'
+                                      : 'Featured : False',
                                   style: TextStyle(
-                                    color: int.parse(controller
-                                                .allProductsList[index]
-                                                .quantity) >=
-                                            5
+                                    color: controller
+                                            .allProductsList[index].featured!
                                         ? Colors.black
                                         : Colors.red,
                                   ),
                                 ),
-                                // Text(
-                                //   controller.allProductsList[index].totalSell,
-                                // ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Obx(
+                                  () => controller.allProductsList[index]
+                                              .quantity! >=
+                                          5
+                                      ? Text(
+                                          'Stock : ${controller.allProductsList[index].quantity!}',
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        )
+                                      : Text(
+                                          'Low Stock : ${controller.allProductsList[index].quantity!}',
+                                          style: const TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                ),
                               ],
                             ),
                           ),

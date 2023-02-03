@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 import '../../../general/constans/constans.dart';
 import '../../../general/constans/url.dart';
@@ -11,9 +10,8 @@ import '../screen/login_page_view.dart';
 
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
+  Rx<String> userUid = ''.obs;
   late Rx<User?> user;
-
-  GetStorage storage = GetStorage();
 
   @override
   void onReady() {
@@ -93,6 +91,7 @@ class AuthController extends GetxController {
 
       Get.to(MainPageView());
       storage.write('uid', auth.currentUser!.uid);
+      userUid.value = auth.currentUser!.uid;
     } catch (e) {
       Get.back();
       Get.snackbar(

@@ -4,20 +4,24 @@ import 'package:ds_admin/app/productPage/screen/add_product_page.dart';
 import 'package:ds_admin/app/productPage/screen/carousel_image_view.dart';
 import 'package:ds_admin/app/productPage/screen/category_page_view.dart';
 import 'package:ds_admin/app/productPage/screen/product_page_view.dart';
+import 'package:ds_admin/app/settingsPage/screen/ads_setting_page.dart';
+
 import 'package:get/get.dart';
 
 import '../../app/productPage/screen/brand_page_view.dart';
+import '../../app/settingsPage/screen/delivery_charge_update_page_view.dart';
+import '../../app/settingsPage/screen/setting_page_view.dart';
 
 class RoutesClass {
   static String mainPage = '/';
   // static String accountPage = '/accountPage';
   static String brandPage = '/brandPage';
   static String categoryPage = '/categoryPage';
-  // static String exchangePage = '/exchangePage';
+  static String deliveryUpdatePage = '/deliveryUpdatePage';
   static String homePage = '/homepage';
-  // static String profilePage = '/profilePage';
+  static String adsSettingPage = '/adsSettingPage';
   static String addProduct = '/addProduct';
-  // static String sellPage = '/sellPage';
+  static String settingsPage = '/settingsPage';
   // static String sellHistory = '/sellHistory';
   // static String loginPage = '/loginPage';
   // static String signUpPage = '/signUpPage';
@@ -28,11 +32,11 @@ class RoutesClass {
   // static String getAccountPageRoute() => accountPage;
   static String getBrandPageRoute() => brandPage;
   static String getCategoryPageRoute() => categoryPage;
-  // static String getExchangePageRoute() => exchangePage;
+  static String getDeliveryUpdatePageRoute() => deliveryUpdatePage;
   static String getHomePageRoute() => homePage;
-  // static String getProfilePageRoute() => profilePage;
+  static String getAdsSettingPageRoute() => adsSettingPage;
   static String getAddProductPageRoute() => addProduct;
-  // static String getSellPageRoute() => sellPage;
+  static String getSettingPageRoute() => settingsPage;
   // static String getSellHistoryPageRoute() => sellHistory;
   // static String getLoginPageRoute() => loginPage;
   // static String getSignUpPagePageRoute() => signUpPage;
@@ -67,6 +71,18 @@ class RoutesClass {
     GetPage(
       page: () => CarouselImageView(),
       name: carouselPage,
+    ),
+    GetPage(
+      page: () => SettingsPageView(),
+      name: settingsPage,
+    ),
+    GetPage(
+      page: () => const DeliveryChargeUpdatePageView(),
+      name: deliveryUpdatePage,
+    ),
+    GetPage(
+      page: () => AdsSettingPageView(),
+      name: adsSettingPage,
     ),
   ];
 }

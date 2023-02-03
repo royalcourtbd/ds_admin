@@ -6,7 +6,9 @@ import 'package:ds_admin/app/productPage/controller/brand_page_controller.dart';
 import 'package:ds_admin/app/productPage/controller/carousel_page_controller.dart';
 import 'package:ds_admin/app/productPage/controller/category_page_controller.dart';
 import 'package:ds_admin/app/productPage/controller/product_page_controller.dart';
+import 'package:ds_admin/app/settingsPage/controller/setting_page_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../app/authPage/controller/auth_controller.dart';
@@ -22,6 +24,8 @@ CarouselPageController carouselPageController = CarouselPageController.instance;
 ProductDetailsPageController productDetailsPageController =
     ProductDetailsPageController.instance;
 
+SettingsPageController settingsPageController = SettingsPageController.instance;
+GetStorage storage = GetStorage();
 ImagePicker imagePicker = ImagePicker();
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 FirebaseAuth auth = FirebaseAuth.instance;

@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final productModel = productModelFromJson(jsonString);
-
 import 'dart:convert';
 
 ProductModel productModelFromJson(String str) =>
@@ -23,8 +19,8 @@ class ProductModel {
     this.productId,
     this.productName,
     this.rate,
-    this.quantity,
     this.totalSell,
+    this.quantity,
     this.available,
     this.featured,
   });
@@ -33,16 +29,16 @@ class ProductModel {
   String? category;
   String? createdAt;
   String? description;
-  String? discountPrice;
+  double? discountPrice;
   String? docId;
   String? highlights;
   List<String>? image;
-  String? price;
+  double? price;
   String? productId;
   String? productName;
-  String? rate;
-  String? quantity;
-  String? totalSell;
+  double? rate;
+  int? totalSell;
+  int? quantity;
   bool? available;
   bool? featured;
 
@@ -59,8 +55,8 @@ class ProductModel {
         productId: json["productId"],
         productName: json["productName"],
         rate: json["rate"],
-        quantity: json["quantity"],
         totalSell: json["totalSell"],
+        quantity: json["quantity"],
         available: json["available"],
         featured: json["featured"],
       );
@@ -78,8 +74,8 @@ class ProductModel {
         "productId": productId,
         "productName": productName,
         "rate": rate,
-        "quantity": quantity,
         "totalSell": totalSell,
+        "quantity": quantity,
         "available": available,
         "featured": featured,
       };
